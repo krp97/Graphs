@@ -1,12 +1,13 @@
 #include "../include/Adjacency_Matrix.hpp"
 #include <climits>
+#include <iostream>
 
 Adjacency_Matrix::Adjacency_Matrix(std::vector<std::vector<int>>& matrix)
     : a_matrix_{ matrix }
 {}
 
 Adjacency_Matrix::Adjacency_Matrix(const int size)
-    : a_matrix_{ std::vector<std::vector<int>>(size) }
+    : a_matrix_{ std::vector<std::vector<int>>(size, std::vector<int>(size)) }
 {}
 
 std::vector<int>& Adjacency_Matrix::operator[](const int index)
@@ -35,10 +36,9 @@ Adjacency_Matrix::pair_vector Adjacency_Matrix::dijkstra(const int start_v)
 
     auto cost_prev{ pair_vector() };
     init_costs(cost_prev, start_v);
-
     while(!pq.empty())
         dijkstra(pq, cost_prev);
-    
+
     return cost_prev;
 }
 
@@ -54,15 +54,20 @@ void Adjacency_Matrix::init_costs(pair_vector& cost_prev, const int start_v)
 void Adjacency_Matrix::dijkstra(pair_pqueue& pq, pair_vector& cost_prev)
 {
     auto vertex{ pq.top() };
+    pq.pop();
+
     int v_cost{ vertex.first }, v_index{ vertex.second };
     auto neighbours{ extract_neighbours(v_index) };
 
+    int updated_weight;
     for(auto n_it{ neighbours.begin() }; n_it != neighbours.end(); ++n_it)
     {
         bool cost_updated{ update_cost(cost_prev, v_index, (*n_it)) };
-        pq.pop();
-        if(cost_updated)  
-            pq.push(cost_prev.at((*n_it)));
+        if(cost_updated)
+        {
+            updated_weight = cost_prev.at((*n_it)).first;
+            pq.push(std::pair<int,int>(updated_weight, (*n_it)));
+        }             
     }
 }
 
