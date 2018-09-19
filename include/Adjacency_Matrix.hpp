@@ -11,8 +11,10 @@ public:
     Adjacency_Matrix(std::vector<std::vector<int>>& matrix);
     Adjacency_Matrix(const int size);
 
-    bool operator==(const Adjacency_Matrix& rhs);
+    bool operator==(const Adjacency_Matrix& rhs) const;
+    bool operator!=(const Adjacency_Matrix& rhs) const;
     std::vector<int>& operator[](const int index);
+
     pair_vector dijkstra(const int start_v);
 
 private:

@@ -7,7 +7,7 @@ Adjacency_Matrix::Adjacency_Matrix(std::vector<std::vector<int>>& matrix)
 {}
 
 Adjacency_Matrix::Adjacency_Matrix(const int size)
-    : a_matrix_{ std::vector<std::vector<int>>(size, std::vector<int>(size)) }
+    : a_matrix_{ std::vector<std::vector<int>>(size, std::vector<int>(size, 0)) }
 {}
 
 std::vector<int>& Adjacency_Matrix::operator[](const int index)
@@ -15,16 +15,21 @@ std::vector<int>& Adjacency_Matrix::operator[](const int index)
     return a_matrix_.at(index);
 }
 
-bool Adjacency_Matrix::operator==(const Adjacency_Matrix& rhs)
+bool Adjacency_Matrix::operator==(const Adjacency_Matrix& rhs) const
 {
     auto vec_it{ a_matrix_.begin() };
     auto rhs_it{ rhs.a_matrix_.begin() };
 
     for(; vec_it != a_matrix_.end(); ++vec_it, ++rhs_it)
-        if( !std::equal((*vec_it).begin(), (*vec_it).end(), (*rhs_it).begin()) )
+        if( !((*vec_it) == (*rhs_it)))
             return false;
     
     return true;
+}
+
+bool Adjacency_Matrix::operator!=(const Adjacency_Matrix& rhs) const
+{
+    return !(*this==rhs);
 }
 
 // Within the dijkstra's algorithm std::pair<int,int>::first is used as
