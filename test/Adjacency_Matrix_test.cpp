@@ -3,44 +3,43 @@
 
 TEST(Operators, compare_same)
 {
-    auto expected{ Adjacency_Matrix(3) };
-    expected[0][1] = 1;
-    expected[1][0] = 1;
-    expected[0][2] = 3;
-    expected[2][0] = 3;
-    expected[1][2] = 1;
-    expected[2][1] = 1;
+    auto input_vec{ std::vector<std::vector<int>>(5, std::vector<int>(5)) };
+    input_vec.at(0).at(1) = 3;
+    input_vec.at(1).at(4) = 1;
+    input_vec.at(2).at(1) = 9;
+    input_vec.at(3).at(2) = 5;
+    auto obj1{ Adjacency_Matrix(input_vec) };
+    auto obj2{ Adjacency_Matrix(input_vec) };
 
-    auto input_vec{ std::vector<std::vector<int>> (3, std::vector<int>(3))};
-    input_vec.at(0).at(1) = 1;
-    input_vec.at(1).at(0) = 1;
-    input_vec.at(0).at(2) = 3;
-    input_vec.at(2).at(0) = 3;
-    input_vec.at(1).at(2) = 1;
-    input_vec.at(2).at(1) = 1;
-    auto actual{ Adjacency_Matrix(input_vec) };
-
-    EXPECT_EQ(expected, actual);
+    ASSERT_EQ(obj1, obj2);
 }
 
 TEST(Operators, compare_different)
 {
-    auto expected{ Adjacency_Matrix(5) };
-    auto actual{Adjacency_Matrix(6) };
-    EXPECT_NE(expected, actual);
-}
+    auto input_vec1{ std::vector<std::vector<int>>(5, std::vector<int>(5)) };
+    input_vec1.at(0).at(1) = 3;
+    input_vec1.at(1).at(4) = 1;
+    input_vec1.at(2).at(1) = 9;
+    input_vec1.at(3).at(2) = 5;
+    auto expected{ Adjacency_Matrix(input_vec1) };
 
-TEST(Init, fixed_size_zeros)
-{
-    
-}
-
-TEST(Init, with_data)
-{
-
+    auto input_vec2{input_vec1};
+    input_vec2.at(2).at(2) = 8;
+    auto actual{Adjacency_Matrix(input_vec2) };
+    ASSERT_NE(expected, actual);
 }
 
 TEST(Operators, indexing)
 {
+    auto input_vec{ std::vector<std::vector<int>>(5, std::vector<int>(5)) };
+    input_vec.at(0).at(1) = 3;
+    input_vec.at(1).at(4) = 1;
+    input_vec.at(2).at(1) = 9;
+    input_vec.at(3).at(2) = 5;
+    auto test_mat{ Adjacency_Matrix(input_vec) };
 
+    ASSERT_EQ(3, test_mat[0][1]);
+    ASSERT_EQ(1, test_mat[1][4]);
+    ASSERT_EQ(9, test_mat[2][1]);
+    ASSERT_EQ(5, test_mat[3][2]);
 }

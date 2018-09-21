@@ -15,7 +15,8 @@ add_executable(Graphs ${SOURCES})
 target_sources(Graphs 
         PUBLIC
             "./src/main.cpp"
-            "./src/Adjacency_Matrix.cpp")
+            "./src/Adjacency_Matrix.cpp"
+            "./src/Node.cpp")
 target_include_directories(Graphs PRIVATE "./include")
 
 # Test module with GTest

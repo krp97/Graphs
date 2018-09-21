@@ -1,17 +1,32 @@
 #pragma once
+
+#include "Node.hpp"
 #include <list>
 #include <vector>
+#include <queue>
 
 class Adjacency_List{
 
-public:
+    using pair_pqueue = std::priority_queue<std::pair<int,int>>;
+    using pair_vector = std::vector<std::pair<int,int>>;
 
-    Adjacency_List(std::vector< std::list<int> > list);
+public:
+    Adjacency_List() = delete;
+    Adjacency_List(std::vector< std::list<Node> > list);
     Adjacency_List(const int size);
 
-    bool operator==(const Adjacency_List& rhs);
-    std::list<int>& operator[](const int index);
+    bool operator==(const Adjacency_List& rhs) const;
+    bool operator!=(const Adjacency_List& rhs) const;
+    const std::list<Node>& operator[](const int index) const;
+
+    pair_vector dijkstra(const int start_v);
 
 private:
-    std::vector< std::list<int> > a_list_;
+    std::vector< std::list<Node> > a_list_;
+
+    void dijkstra(pair_pqueue& pq, pair_vector& cost_prev);
+    std::vector<int> extract_neighbours(const int vertex);
+    void init_costs(pair_vector& cost_prev, const int start_v);
+    bool update_cost(pair_vector& cost_prev, const int source, const int neighbour);
+    int get_travel_cost(const int start_v, const int neighbour) const;
 };
