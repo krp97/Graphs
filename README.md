@@ -1,2 +1,2 @@
 # Graphs
-Shortest Path Tree and Minimal Spanning Tree algorithms for graphs.
+Shortest Path Tree and Minimum Spanning Tree algorithms for graphs.
