@@ -17,7 +17,8 @@ target_sources(Graphs
             "./src/main.cpp"
             "./src/Adjacency_Matrix.cpp"
             "./src/Node.cpp"
-            "./src/File_Handler.cpp")
+            "./src/File_Handler.cpp"
+	    "./src/Edge.cpp")
 target_include_directories(Graphs PRIVATE "./include")
 
 # Test module with GTest
