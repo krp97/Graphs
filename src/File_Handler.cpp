@@ -1,11 +1,7 @@
 #include "../include/File_Handler.hpp"
 
-File_Handler::File_Handler(Adjacency_Matrix& matrix, const std::string& filepath)
-    : matrix_{ &matrix }, list_{ nullptr }, filepath_{ filepath }, error_msg_{""}
-{}
-
-File_Handler::File_Handler(Adjacency_List& list, const std::string& filepath)
-    : matrix_{ nullptr }, list_{ &list }, filepath_{ filepath }, error_msg_{""}
+File_Handler::File_Handler(const std::string& filepath)
+    : filepath_{ filepath }, error_msg_{""}
 {}
 
 std::string File_Handler::get_path() const
@@ -13,9 +9,16 @@ std::string File_Handler::get_path() const
     return filepath_;
 }   
 
-bool File_Handler::load_from_file()
+std::string File_Handler::what() const
+{
+    return error_msg_;
+}
+
+std::vector<Edge> File_Handler::load_from_file()
 {
     std::ifstream in_file;
+    in_file.exceptions(std::ifstream::failbit);
+    
     std::vector<Edge> out;
     try 
     { 
@@ -26,20 +29,14 @@ bool File_Handler::load_from_file()
     catch(const std::ios_base::failure&)
     {
         error_msg_ = "Error when opening a file.";
-        return false;
+        throw;
     }
     catch(const std::invalid_argument&)
     {
-        error_msg_ = "Error when reading from a file.";
-        return false;
+        error_msg_ = "Error when parsing data from a file.";
+        throw std::ios_base::failure("Error when trying to load data.");
     }
-
-    if(matrix_)
-        build_matrix(out);
-    else if(list_)
-        build_list(out);
-
-    return true;
+    return out;
 }
 
 void File_Handler::save_to_file()
@@ -81,21 +78,8 @@ void File_Handler::parse_input(std::vector<Edge>& output, std::string line)
         throw std::invalid_argument("Error when reading the file.");
 }
 
-void File_Handler::build_matrix(std::vector<Edge>& data)
-{
-    for(auto& edges : data)
-    {
-        
-    }
-}
-
-void File_Handler::build_list(std::vector<Edge>& data)
-{
-
-}
-
 std::string File_Handler::prep_filepath(std::string filepath)
 {
-
+    return filepath;
 }
 

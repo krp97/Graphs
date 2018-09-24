@@ -1,14 +1,19 @@
-#include "../include/Adjacency_Matrix.hpp"
 #include <climits>
-#include <iostream>
+
+#include "../include/Adjacency_Matrix.hpp"
+#include "../include/File_Handler.hpp"
 
 Adjacency_Matrix::Adjacency_Matrix(std::vector<std::vector<int>> matrix)
     : a_matrix_{ matrix }
 {}
 
-Adjacency_Matrix::Adjacency_Matrix(const int size)
-    : a_matrix_{ std::vector<std::vector<int>>(size, std::vector<int>(size, 0)) }
-{}
+Adjacency_Matrix::Adjacency_Matrix(const std::vector<Edge>& data)
+{
+    int size{ find_highest_vertex(data) };
+    auto input{ std::vector<std::vector<int>>(size, std::vector<int>(size)) };
+    fill_w_data(input, data);
+    a_matrix_ = input;
+}
 
 const std::vector<int>& Adjacency_Matrix::operator[](const int index) const
 {
@@ -42,6 +47,32 @@ bool Adjacency_Matrix::operator!=(const Adjacency_Matrix& rhs) const
 int Adjacency_Matrix::get_size() const
 {
     return a_matrix_.size();
+}
+
+int Adjacency_Matrix::find_highest_vertex(const std::vector<Edge>& data) const
+{
+    int index{0};
+    for(auto& edge: data)
+    {
+        if(edge.get_start() > index)
+            index = edge.get_start();
+        if(edge.get_end() > index)
+            index = edge.get_end();
+    }
+    return index;
+}
+
+void Adjacency_Matrix::fill_w_data(std::vector<std::vector<int>>& empty_mat, const std::vector<Edge>& data)
+{
+    int start, end, weight;
+    for(auto& edge: data)
+    {
+        start = edge.get_start();
+        end = edge.get_end();
+        weight = edge.get_weight();
+
+        empty_mat.at(start).at(end) = weight;
+    }
 }
 
 // Within the dijkstra's algorithm std::pair<int,int>::first is used as

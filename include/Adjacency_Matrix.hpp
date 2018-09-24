@@ -2,6 +2,9 @@
 
 #include <vector>
 #include <queue>
+#include <string>
+
+#include "../include/Edge.hpp"
 
 class Adjacency_Matrix{
 
@@ -10,7 +13,8 @@ class Adjacency_Matrix{
 
 public:
     Adjacency_Matrix() = delete;
-    Adjacency_Matrix(std::vector<std::vector<int>> matrix);
+    Adjacency_Matrix(std::vector<std::vector<int>> input);
+    Adjacency_Matrix(const std::vector<Edge>& data);
 
     bool operator==(const Adjacency_Matrix& rhs) const;
     bool operator!=(const Adjacency_Matrix& rhs) const;
@@ -22,11 +26,10 @@ public:
 
 private:
 
-    // Future note:
-    // If load and save to file is not implemented by the end of the project,
-    // this attribute(same with the list) has to be changed to a ref to const.
     std::vector<std::vector<int>> a_matrix_;
-    Adjacency_Matrix(const int size);   // Only used for initializing with files.
+
+    int find_highest_vertex(const std::vector<Edge>& data) const;
+    void fill_w_data(std::vector<std::vector<int>>& empty_mat, const std::vector<Edge>& data);
 
     bool pre_dijkstra_checks();
     bool negative_weights();
