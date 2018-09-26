@@ -11,6 +11,9 @@ public:
     int get_end() const;
     int get_weight() const;
 
+    bool operator==(const Edge& rhs) const;
+    bool operator!=(const Edge& rhs) const;
+
 private:
     int start_;
     int end_;
