@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
-
-#include "../include/Adjacency_Matrix.hpp"
-#include "../include/File_Handler.hpp"
+#include "../../include/Adjacency_Matrix.hpp"
+#include "../../include/File_Handler.hpp"
 
 TEST(Dijkstra_Matrix, empty)
 {
@@ -40,7 +39,7 @@ TEST(Dijkstra_Matrix, one_edge)
 
 TEST(Dijkstra_Matrix, undir1_case)
 {   
-    auto handler{ File_Handler("../data/undir1.txt") };
+    auto handler{ File_Handler("../../data/undir1.txt") };
     auto test_matrix{ Adjacency_Matrix(handler.load_from_file()) };
     std::vector<std::pair<int,int>> actual{ test_matrix.dijkstra(0) };
     
