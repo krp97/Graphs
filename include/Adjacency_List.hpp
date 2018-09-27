@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Node.hpp"
+#include "Edge.hpp"
+
 #include <list>
 #include <vector>
 #include <queue>
@@ -12,8 +14,8 @@ class Adjacency_List{
 
 public:
     Adjacency_List() = delete;
-    Adjacency_List(std::vector< std::list<Node> > list);
-    Adjacency_List(const int size);
+    Adjacency_List(std::vector<std::list<Node>> list);
+    Adjacency_List(std::vector<Edge> file_input);
 
     bool operator==(const Adjacency_List& rhs) const;
     bool operator!=(const Adjacency_List& rhs) const;
@@ -22,9 +24,14 @@ public:
     pair_vector dijkstra(const int start_v);
 
 private:
-    std::vector< std::list<Node> > a_list_;
+    std::vector<std::list<Node>> a_list_;
+
+    int find_highest_index(const std::vector<Edge>& file_input) const;
+    void fill_with_data(std::vector<std::list<Node>>& list, const std::vector<Edge>& file_input);
 
     void dijkstra(pair_pqueue& pq, pair_vector& cost_prev);
+    bool pre_dijkstra_checks();
+    bool negative_weights();
     std::vector<int> extract_neighbours(const int vertex);
     void init_costs(pair_vector& cost_prev, const int start_v);
     bool update_cost(pair_vector& cost_prev, const int source, const int neighbour);

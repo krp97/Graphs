@@ -33,8 +33,6 @@ private:
 
     bool pre_dijkstra_checks();
     bool negative_weights();
-    bool lone_nodes();
-    bool undirected();
     void dijkstra(pair_pqueue& pq, pair_vector& cost_prev);
     std::vector<int> extract_neighbours(const int vertex);
     void init_costs(pair_vector& cost_prev, const int start_v);

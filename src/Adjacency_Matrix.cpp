@@ -9,7 +9,7 @@ Adjacency_Matrix::Adjacency_Matrix(std::vector<std::vector<int>> matrix)
 
 Adjacency_Matrix::Adjacency_Matrix(const std::vector<Edge>& data)
 {
-    int size{ find_highest_vertex(data) };
+    int size{ find_highest_vertex(data) + 1 };
     auto input{ std::vector<std::vector<int>>(size, std::vector<int>(size)) };
     fill_w_data(input, data);
     a_matrix_ = input;
@@ -100,10 +100,6 @@ bool Adjacency_Matrix::pre_dijkstra_checks()
         return false;
     if(!negative_weights())
         return false;
-    if(!lone_nodes())
-        return false;
-    if(!undirected())
-        return false;
     
     return true;
 }
@@ -119,37 +115,6 @@ bool Adjacency_Matrix::negative_weights()
         }
     }
     return true;    
-}
-
-// Checks if any column of the matrix is filled with 0.
-bool Adjacency_Matrix::lone_nodes()
-{
-    bool col_zero_check = true;
-    for(int col_it{0}; col_it < a_matrix_.size(); ++col_it)
-    {
-        for(int row_it{0}; row_it < a_matrix_.size(); ++row_it)
-        {
-            if(a_matrix_.at(row_it).at(col_it) != 0)
-            {
-                col_zero_check = false;
-            }
-        }
-        col_zero_check = true;
-    }
-    return col_zero_check;
-}
-
-bool Adjacency_Matrix::undirected()
-{
-    for(int row_it{0}; row_it < a_matrix_.size(); ++row_it)
-    {
-        for(int col_it{ row_it + 1 }; col_it < a_matrix_.size(); ++col_it)
-        {
-            if(a_matrix_[row_it][col_it] != a_matrix_[col_it][row_it])
-                return false;
-        }
-    }
-    return true;
 }
 
 void Adjacency_Matrix::init_costs(pair_vector& cost_prev, const int start_v)

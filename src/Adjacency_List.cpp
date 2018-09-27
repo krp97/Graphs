@@ -1,14 +1,19 @@
 #include "../include/Adjacency_List.hpp"
 #include <algorithm>
 #include <climits>
+#include <math.h>
 
-Adjacency_List::Adjacency_List(std::vector< std::list<Node> > list)
+Adjacency_List::Adjacency_List(std::vector<std::list<Node>> list)
     : a_list_{ list }
 {}
 
-Adjacency_List::Adjacency_List(const int size)
-    : a_list_{ std::vector<std::list<Node>> (size, std::list<Node>()) }
-{}
+Adjacency_List::Adjacency_List(std::vector<Edge> file_input)
+{
+    int size = find_highest_index(file_input) + 1;
+    auto input{ std::vector<std::list<Node>>(size, std::list<Node>()) };
+    fill_with_data(input, file_input);
+    a_list_ = input;
+}
 
 bool Adjacency_List::operator==(const Adjacency_List& rhs) const
 {
@@ -33,17 +38,66 @@ const std::list<Node>& Adjacency_List::operator[](const int index) const
     return a_list_.at(index);
 }
 
+int Adjacency_List::find_highest_index(const std::vector<Edge>& file_input) const
+{
+    int index{0};
+    for(auto& edge : file_input)
+    {
+        if(index < edge.get_start())
+            index = edge.get_start();
+    }
+    return index;
+}
+void Adjacency_List::fill_with_data(std::vector<std::list<Node>>& list, const std::vector<Edge>& file_input)
+{
+    int start, end, weight;
+    for(auto& edge: file_input)
+    {
+        start = edge.get_start();
+        end = edge.get_end();
+        weight = edge.get_weight();
+        list.at(start).push_back(Node(end, weight));
+    }
+}
+
 Adjacency_List::pair_vector Adjacency_List::dijkstra(const int start_v)
 {
-    auto pq{ pair_pqueue() };
-    pq.push(std::pair<int,int>(0, start_v));
+    if(pre_dijkstra_checks())
+    {
+        auto pq{ pair_pqueue() };
+        pq.push(std::pair<int,int>(0, start_v));
 
-    auto cost_prev{ pair_vector() };
-    init_costs(cost_prev, start_v);
-    while(!pq.empty())
-        dijkstra(pq, cost_prev);
+        auto cost_prev{ pair_vector() };
+        init_costs(cost_prev, start_v);
+        while(!pq.empty())
+            dijkstra(pq, cost_prev);
 
-    return cost_prev;
+        return cost_prev;
+    }
+    return pair_vector();
+}
+
+bool Adjacency_List::pre_dijkstra_checks()
+{
+    if(a_list_.size() == 0)
+        return false;
+    if(negative_weights())
+        return false;
+        
+    return true;
+}
+
+bool Adjacency_List::negative_weights()
+{
+    for(auto& lists: a_list_)
+    {
+        for(auto& nodes: lists)
+        {
+            if(nodes.get_weight() < 0)
+                return true;
+        }
+    }
+    return false;
 }
 
 void Adjacency_List::init_costs(pair_vector& cost_prev, const int start_v)

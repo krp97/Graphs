@@ -1,7 +1,4 @@
-# Node count:
-6
-
-# Graph Structure(Start End Weight):
+# Edges(Start, End, Weight):
 0 1 7
 1 0 7
 0 5 1
