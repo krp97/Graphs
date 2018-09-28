@@ -1,11 +1,10 @@
-
 cmake_minimum_required(VERSION 2.8.2)
 
 if(${CMAKE_VERSION} VERSION_LESS 2.8.2)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
 
-project(Graphs
+project(graphs
         DESCRIPTION "SPT and MST algos"
         LANGUAGES CXX)
 
@@ -26,20 +25,15 @@ set(SOURCES
     ${CMAKE_SOURCE_DIR}/src/File_Handler.cpp
     ${CMAKE_SOURCE_DIR}/src/Edge.cpp)
 
-add_custom_target(Graphs
-                    SOURCES ${SOURCES} ${HEADERS})
+add_executable(graphs ${SOURCES} ${HEADERS})
 
-# Find Gtest and install if it hasn't been found.
+# Pull and install gtest.
+include(${CMAKE_SOURCE_DIR}/cmake/gtest_install.cmake)
 
-find_package(GTest QUIET)
-if(NOT ${GTEST_FOUND})
-    include(${CMAKE_SOURCE_DIR}/cmake/gtest_install.cmake)
-endif()
-
-set(PROJECT_TEST_NAME Graphs_test)
+set(PROJECT_TEST_NAME graphs_test)
 
 add_executable(${PROJECT_TEST_NAME})
-target_link_libraries(${PROJECT_TEST_NAME} gtest_main)
+
 target_sources(${PROJECT_TEST_NAME}
   PRIVATE  
     "${CMAKE_SOURCE_DIR}/test/Adjacency_Matrix_test.cpp"
@@ -57,3 +51,4 @@ target_include_directories(${PROJECT_TEST_NAME}
   PRIVATE ${GTEST_INCLUDE_DIRS}
   PRIVATE "./include")
 
+target_link_libraries(${PROJECT_TEST_NAME} gtest_main)
