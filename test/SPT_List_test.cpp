@@ -53,3 +53,37 @@ TEST(Dijkstra_List, undir1_case)
 
     EXPECT_EQ(expected, actual);
 }
+
+TEST(B_Ford_List, empty)
+{
+	auto test_list{ Adjacency_List(std::vector<std::list<Node>>()) };
+	std::vector<std::pair<int, int>> actual{ test_list.bellman_ford(0) };
+
+	auto expected{ std::vector<std::pair<int,int>>() };
+	EXPECT_EQ(expected, actual);
+}
+
+TEST(B_Ford_List, one_edge_loop)
+{
+	auto input{ std::vector<std::list<Node>>(1) };
+	input.at(0).push_back(Node(0, 1));
+	auto test_list{ Adjacency_List(input) };
+
+	auto expected{ std::vector<std::pair<int,int>>() };
+
+	EXPECT_EQ(expected, test_list.bellman_ford(0));
+}
+
+TEST(B_Ford_List, undir1)
+{
+	auto handler{ File_Handler("../data/undir1.txt") };
+	auto test_list{ Adjacency_List(handler.load_from_file()) };
+	std::vector<std::pair<int, int>> actual{ test_list.bellman_ford(0) };
+
+	auto expected{ std::vector<std::pair<int,int>>(5, std::pair<int,int>()) };
+	expected.at(0) = std::pair<int, int>(0, 0);
+	expected.at(4) = std::pair<int, int>(1, 0);
+	expected.at(1) = std::pair<int, int>(2, 4);
+	expected.at(2) = std::pair<int, int>(4, 1);
+	expected.at(3) = std::pair<int, int>(5, 2);
+}

@@ -22,21 +22,17 @@ const std::vector<int>& Adjacency_Matrix::operator[](const int index) const
 
 bool Adjacency_Matrix::operator==(const Adjacency_Matrix& rhs) const
 {
-    if(a_matrix_ == rhs.a_matrix_)
-    {
-        auto rhs_it{ rhs.a_matrix_.begin() };
+	if (a_matrix_.size() != rhs.a_matrix_.size())
+		return false;
 
-        for(auto& mat_it : a_matrix_)
-        {
-            if(mat_it != (*rhs_it))
-                return false;
-            ++rhs_it;
-        }
-        return true;
-    }
-    else 
-        return false;
-    
+	auto rhs_it{ rhs.a_matrix_.begin() };
+	for(auto& mat_it : a_matrix_)
+	{
+	    if(mat_it != (*rhs_it))
+	        return false;
+	    ++rhs_it;
+	}
+	return true;    
 }
 
 bool Adjacency_Matrix::operator!=(const Adjacency_Matrix& rhs) const
@@ -77,11 +73,11 @@ void Adjacency_Matrix::fill_w_data(std::vector<std::vector<int>>& empty_mat, con
 
 // Within the dijkstra's algorithm std::pair<int,int>::first is used as
 // a cost of travel to std::pair<int,int>::second.
-Adjacency_Matrix::pair_vector Adjacency_Matrix::dijkstra(const int start_v)
+std::vector<std::pair<int, int>> Adjacency_Matrix::dijkstra(const int start_v)
 {
     if(pre_dijkstra_checks())
     {
-        auto pq{ pair_pqueue() };
+        auto pq{ pair_p_queue() };
         pq.push(std::pair<int,int>(0, start_v));
 
         auto cost_prev{ pair_vector() };
@@ -126,12 +122,11 @@ void Adjacency_Matrix::init_costs(pair_vector& cost_prev, const int start_v)
     cost_prev.at(start_v).second = start_v;
 }
 
-void Adjacency_Matrix::dijkstra(pair_pqueue& pq, pair_vector& cost_prev)
+void Adjacency_Matrix::dijkstra(pair_p_queue& pq, pair_vector& cost_prev)
 {
-    auto vertex{ pq.top() };
-    pq.pop();
+    int v_index{ pq.top().second };
+	pq.pop();
 
-    int v_cost{ vertex.first }, v_index{ vertex.second };
     auto neighbours{ extract_neighbours(v_index) };
 
     int updated_weight;
@@ -149,18 +144,17 @@ void Adjacency_Matrix::dijkstra(pair_pqueue& pq, pair_vector& cost_prev)
 std::vector<int> Adjacency_Matrix::extract_neighbours(const int node)
 {
     auto out_neighbours{ std::vector<int>() };
-    int index;
 
-    auto mat_it{ a_matrix_.at(node).begin() };
-    auto it_end{ a_matrix_.at(node).end() };
-    for(; mat_it != it_end; ++mat_it)
-    {
-        if((*mat_it) != 0)
-        {
-            index = mat_it - a_matrix_.at(node).begin();
-            out_neighbours.push_back(index);
-        }
-    }
+	int index, counter{0};
+	for (auto& mat_it : a_matrix_.at(node))
+	{
+		if (mat_it != 0)
+		{
+			index = counter;
+			out_neighbours.push_back(index);
+		}
+		++counter;
+	}
     return out_neighbours;
 }
 
@@ -177,4 +171,60 @@ bool Adjacency_Matrix::update_cost(pair_vector& cost_prev, const int source, con
         return true;
     }
     return false;
+}
+
+std::vector<std::pair<int, int>> Adjacency_Matrix::bellman_ford(const int start_v)
+{
+	if (a_matrix_.size() > 0)
+	{
+		std::deque<int> vertex_q{ std::deque<int>() };
+		vertex_q.push_front(start_v);
+
+		pair_vector cost_prev{ pair_vector(a_matrix_.size()) };
+		init_costs(cost_prev, start_v);
+
+		return bellman_ford(vertex_q, cost_prev);
+	}
+	else
+		return pair_vector();
+}
+
+Adjacency_Matrix::pair_vector Adjacency_Matrix::bellman_ford(std::deque<int>& vertex_q, Adjacency_Matrix::pair_vector& cost_prev)
+{
+	int negative_cycle = a_matrix_.size() - 1;
+	while (!vertex_q.empty())
+	{
+		negative_cycle--;
+		if (negative_cycle >= 0)
+			bf_relaxation(vertex_q, cost_prev);
+		else
+			return pair_vector();
+	}
+	return cost_prev;
+}
+
+void Adjacency_Matrix::bf_relaxation(std::deque<int>& vertex_q, Adjacency_Matrix::pair_vector& cost_prev)
+{
+	int vertex{ vertex_q.front() };
+	vertex_q.pop_front();
+	
+	std::vector<int> neighbours{ extract_neighbours(vertex) };
+
+	bool updated_f{false};
+	for(auto& neighbour : neighbours)
+	{
+		updated_f = update_cost(cost_prev, vertex, neighbour);
+		if (updated_f)
+		{
+			slf_push(vertex_q, neighbour);
+		}	
+	}
+}
+
+void Adjacency_Matrix::slf_push(std::deque<int>& vertex_q, const int vertex)
+{
+	if (vertex < vertex_q.front())
+		vertex_q.push_front(vertex);
+	else
+		vertex_q.push_back(vertex);
 }

@@ -2,14 +2,16 @@
 
 #include <vector>
 #include <queue>
+#include <deque>
 #include <string>
 
 #include "../include/Edge.hpp"
 
 class Adjacency_Matrix{
 
-    using pair_pqueue = std::priority_queue<std::pair<int,int>>;
-    using pair_vector = std::vector<std::pair<int,int>>;
+    using pair_p_queue = std::priority_queue<std::pair<int, int>>;
+	using pair_deque = std::deque<std::pair<int, int>>;
+    using pair_vector = std::vector<std::pair<int, int>>;
 
 public:
     Adjacency_Matrix() = delete;
@@ -23,6 +25,7 @@ public:
     int get_size() const;
 
     pair_vector dijkstra(const int start_v);
+	pair_vector bellman_ford(const int start_v);
 
 private:
 
@@ -33,8 +36,12 @@ private:
 
     bool pre_dijkstra_checks();
     bool negative_weights();
-    void dijkstra(pair_pqueue& pq, pair_vector& cost_prev);
+    void dijkstra(pair_p_queue& pq, pair_vector& cost_prev);
     std::vector<int> extract_neighbours(const int vertex);
     void init_costs(pair_vector& cost_prev, const int start_v);
     bool update_cost(pair_vector& cost_prev, const int source, const int neighbour);
+
+	pair_vector bellman_ford(std::deque<int>& vertex_q, pair_vector& cost_prev);
+	void bf_relaxation(std::deque<int>& vertex_q, pair_vector& cost_prev);
+	void slf_push(std::deque<int> &vertex_q, const int neighbour);
 };

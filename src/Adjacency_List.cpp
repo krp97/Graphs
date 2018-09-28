@@ -174,3 +174,8 @@ int Adjacency_List::get_travel_cost(const int start_v, const int neighbour) cons
 
     return -1;
 }
+
+std::vector<std::pair<int, int>> Adjacency_List::bellman_ford(const int start_v)
+{
+	return std::vector<std::pair<int, int>>();
+}

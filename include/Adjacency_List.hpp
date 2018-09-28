@@ -22,6 +22,7 @@ public:
     const std::list<Node>& operator[](const int index) const;
 
     pair_vector dijkstra(const int start_v);
+	pair_vector bellman_ford(const int start_v);
 
 private:
     std::vector<std::list<Node>> a_list_;
