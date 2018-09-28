@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "../../include/Adjacency_List.hpp"
-#include "../../include/File_Handler.hpp"
+#include "../include/Adjacency_List.hpp"
+#include "../include/File_Handler.hpp"
 
 TEST(Dijkstra_List, empty)
 {
@@ -40,7 +40,7 @@ TEST(Dijkstra_List, one_edge)
 
 TEST(Dijkstra_List, undir1_case)
 {   
-    auto handler{ File_Handler("../../data/undir1.txt") };
+    auto handler{ File_Handler("../data/undir1.txt") };
     auto test_list{ Adjacency_List(handler.load_from_file()) };
     std::vector<std::pair<int,int>> actual{ test_list.dijkstra(0) };
     

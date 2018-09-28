@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "../../include/Adjacency_List.hpp"
-#include "../../include/File_Handler.hpp"
-#include "../../include/Edge.hpp"
+#include "../include/Adjacency_List.hpp"
+#include "../include/File_Handler.hpp"
+#include "../include/Edge.hpp"
 
 TEST(A_List, compare_same)
 {
@@ -53,7 +53,7 @@ TEST(A_List, indexing)
 
 TEST(A_List, init_w_file_data)
 {
-    auto handler{ File_Handler("../test_file.txt") };
+    auto handler{ File_Handler("../test/test_file.txt") };
     auto output{ handler.load_from_file() };
     
     auto exp_input{ std::vector<std::list<Node>>(10, std::list<Node>()) };

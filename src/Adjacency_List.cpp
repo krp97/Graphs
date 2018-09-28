@@ -17,15 +17,19 @@ Adjacency_List::Adjacency_List(std::vector<Edge> file_input)
 
 bool Adjacency_List::operator==(const Adjacency_List& rhs) const
 {
-    auto vec_it{ a_list_.begin() };
-    auto rhs_it{ rhs.a_list_.begin() };
-    
-    for(; vec_it != a_list_.end(); ++vec_it, ++rhs_it)
-    {
-       if((*vec_it) != (*rhs_it))
-            return false;
-    }
-    return true;
+	if (a_list_.size() == rhs.a_list_.size())
+	{
+		auto rhs_it{ rhs.a_list_.begin() };
+		for (auto& list : a_list_)
+		{
+			if (list != (*rhs_it))
+				return false;
+			++rhs_it;
+		}
+		return true;
+	}
+	else
+		return false;
 }
 
 bool Adjacency_List::operator!=(const Adjacency_List& rhs) const

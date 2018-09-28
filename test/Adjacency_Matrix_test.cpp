@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "../../include/Adjacency_Matrix.hpp"
-#include "../../include/File_Handler.hpp"
+#include "../include/Adjacency_Matrix.hpp"
+#include "../include/File_Handler.hpp"
 
 TEST(A_Matrix, compare_same)
 {
@@ -47,7 +47,7 @@ TEST(A_Matrix, indexing)
 
 TEST(A_Matrix, init_w_file_data)
 {
-    auto handler{ File_Handler("../test_file.txt") };
+    auto handler{ File_Handler("../test/test_file.txt") };
     auto failed_read_o{ std::vector<Edge>() };
     auto output{ handler.load_from_file() };
     ASSERT_NE(failed_read_o, output);
