@@ -37,4 +37,8 @@ private:
     void init_costs(pair_vector& cost_prev, const int start_v);
     bool update_cost(pair_vector& cost_prev, const int source, const int neighbour);
     int get_travel_cost(const int start_v, const int neighbour) const;
+
+    pair_vector bellman_ford(std::deque<int>& vertex_q, pair_vector& cost_prev);
+	void bf_relaxation(std::deque<int>& vertex_q, pair_vector& cost_prev);
+	void slf_push(std::deque<int> &vertex_q, const int neighbour);
 };

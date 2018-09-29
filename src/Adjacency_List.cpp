@@ -177,5 +177,60 @@ int Adjacency_List::get_travel_cost(const int start_v, const int neighbour) cons
 
 std::vector<std::pair<int, int>> Adjacency_List::bellman_ford(const int start_v)
 {
-	return std::vector<std::pair<int, int>>();
+	if (a_list_.size() > 0)
+	{
+		std::deque<int> vertex_q{ std::deque<int>() };
+		vertex_q.push_front(start_v);
+
+		pair_vector cost_prev{ pair_vector() };
+		init_costs(cost_prev, start_v);
+        
+		return bellman_ford(vertex_q, cost_prev);
+	}
+	else
+		return pair_vector();
+}
+
+Adjacency_List::pair_vector Adjacency_List::bellman_ford(std::deque<int>& vertex_q, Adjacency_List::pair_vector& cost_prev)
+{
+    // Each node is pushed to the queue at most V - 1 times.
+    size_t nodes{ a_list_.size() };
+    size_t iterations{ nodes - 1};
+    size_t negative_cycle{nodes * iterations};
+
+	while (!vertex_q.empty())
+	{
+        if(negative_cycle == 0)
+            return pair_vector();
+        negative_cycle--;
+		bf_relaxation(vertex_q, cost_prev);
+	}
+	return cost_prev;
+}
+
+void Adjacency_List::bf_relaxation(std::deque<int>& vertex_q, Adjacency_List::pair_vector& cost_prev)
+{
+	int vertex{ vertex_q.front() };
+	vertex_q.pop_front();
+	
+	std::vector<int> neighbours{ extract_neighbours(vertex) };
+
+	bool updated_f{false};
+	for(auto& neighbour : neighbours)
+	{
+		updated_f = update_cost(cost_prev, vertex, neighbour);
+		if (updated_f)
+			slf_push(vertex_q, neighbour);
+	}
+}
+
+void Adjacency_List::slf_push(std::deque<int>& vertex_q, const int vertex)
+{
+    auto find_v{ std::find(vertex_q.begin(), vertex_q.end(), vertex) };
+    bool exists{ find_v != vertex_q.end() };
+
+	if (vertex < vertex_q.front() && !exists)
+		vertex_q.push_front(vertex);
+	else if(!exists)
+		vertex_q.push_back(vertex);
 }

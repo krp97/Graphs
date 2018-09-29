@@ -3,6 +3,7 @@
 #include <vector>
 #include <queue>
 #include <deque>
+#include <algorithm>
 #include <string>
 
 #include "../include/Edge.hpp"
@@ -10,7 +11,6 @@
 class Adjacency_Matrix{
 
     using pair_p_queue = std::priority_queue<std::pair<int, int>>;
-	using pair_deque = std::deque<std::pair<int, int>>;
     using pair_vector = std::vector<std::pair<int, int>>;
 
 public:

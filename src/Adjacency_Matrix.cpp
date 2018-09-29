@@ -1,4 +1,5 @@
 #include <climits>
+#include <iostream>
 
 #include "../include/Adjacency_Matrix.hpp"
 #include "../include/File_Handler.hpp"
@@ -173,16 +174,16 @@ bool Adjacency_Matrix::update_cost(pair_vector& cost_prev, const int source, con
     return false;
 }
 
-std::vector<std::pair<int, int>> Adjacency_Matrix::bellman_ford(const int start_v)
+Adjacency_Matrix::pair_vector Adjacency_Matrix::bellman_ford(const int start_v)
 {
 	if (a_matrix_.size() > 0)
 	{
 		std::deque<int> vertex_q{ std::deque<int>() };
 		vertex_q.push_front(start_v);
 
-		pair_vector cost_prev{ pair_vector(a_matrix_.size()) };
+		pair_vector cost_prev{ pair_vector() };
 		init_costs(cost_prev, start_v);
-
+        
 		return bellman_ford(vertex_q, cost_prev);
 	}
 	else
@@ -191,14 +192,17 @@ std::vector<std::pair<int, int>> Adjacency_Matrix::bellman_ford(const int start_
 
 Adjacency_Matrix::pair_vector Adjacency_Matrix::bellman_ford(std::deque<int>& vertex_q, Adjacency_Matrix::pair_vector& cost_prev)
 {
-	int negative_cycle = a_matrix_.size() - 1;
+    // Each node is pushed to the queue at most V - 1 times.
+    size_t nodes{ a_matrix_.size() };
+    size_t iterations{ nodes - 1};
+    size_t negative_cycle{nodes * iterations};
+
 	while (!vertex_q.empty())
 	{
-		negative_cycle--;
-		if (negative_cycle >= 0)
-			bf_relaxation(vertex_q, cost_prev);
-		else
-			return pair_vector();
+        if(negative_cycle == 0)
+            return pair_vector();
+        negative_cycle--;
+		bf_relaxation(vertex_q, cost_prev);
 	}
 	return cost_prev;
 }
@@ -215,16 +219,17 @@ void Adjacency_Matrix::bf_relaxation(std::deque<int>& vertex_q, Adjacency_Matrix
 	{
 		updated_f = update_cost(cost_prev, vertex, neighbour);
 		if (updated_f)
-		{
 			slf_push(vertex_q, neighbour);
-		}	
 	}
 }
 
 void Adjacency_Matrix::slf_push(std::deque<int>& vertex_q, const int vertex)
 {
-	if (vertex < vertex_q.front())
+    auto find_v{ std::find(vertex_q.begin(), vertex_q.end(), vertex) };
+    bool exists{ find_v != vertex_q.end() };
+
+	if (vertex < vertex_q.front() && !exists)
 		vertex_q.push_front(vertex);
-	else
+	else if(!exists)
 		vertex_q.push_back(vertex);
 }

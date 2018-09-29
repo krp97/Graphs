@@ -86,4 +86,16 @@ TEST(B_Ford_List, undir1)
 	expected.at(1) = std::pair<int, int>(2, 4);
 	expected.at(2) = std::pair<int, int>(4, 1);
 	expected.at(3) = std::pair<int, int>(5, 2);
+
+    EXPECT_EQ(expected, actual);
+}
+
+TEST(B_Ford_List, negative_cycle)
+{
+    auto handler{ File_Handler("../data/directed1.txt") };
+    auto test_list{ Adjacency_List(handler.load_from_file()) };
+    std::vector<std::pair<int,int>> actual{ test_list.bellman_ford(0) };
+
+    auto expected{ std::vector<std::pair<int, int>>() };
+    EXPECT_EQ(expected, actual);
 }
