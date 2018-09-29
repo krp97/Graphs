@@ -9,7 +9,7 @@ Adjacency_List::Adjacency_List(std::vector<std::list<Node>> list)
 
 Adjacency_List::Adjacency_List(std::vector<Edge> file_input)
 {
-    int size = find_highest_index(file_input) + 1;
+	int size{ find_highest_index(file_input) + 1 };
     auto input{ std::vector<std::list<Node>>(size, std::list<Node>()) };
     fill_with_data(input, file_input);
     a_list_ = input;
@@ -17,19 +17,9 @@ Adjacency_List::Adjacency_List(std::vector<Edge> file_input)
 
 bool Adjacency_List::operator==(const Adjacency_List& rhs) const
 {
-	if (a_list_.size() == rhs.a_list_.size())
-	{
-		auto rhs_it{ rhs.a_list_.begin() };
-		for (auto& list : a_list_)
-		{
-			if (list != (*rhs_it))
-				return false;
-			++rhs_it;
-		}
+	if (a_list_ == rhs.a_list_)
 		return true;
-	}
-	else
-		return false;
+	return false;
 }
 
 bool Adjacency_List::operator!=(const Adjacency_List& rhs) const
@@ -106,7 +96,7 @@ bool Adjacency_List::negative_weights()
 
 void Adjacency_List::init_costs(pair_vector& cost_prev, const int start_v)
 {
-    for(int i{0}; i<a_list_.size(); ++i)
+    for(unsigned int i{0}; i < a_list_.size(); ++i)
         cost_prev.push_back(std::pair<int,int>(INT_MAX, INT_MAX));
 
     cost_prev.at(start_v).first = 0;
@@ -115,45 +105,42 @@ void Adjacency_List::init_costs(pair_vector& cost_prev, const int start_v)
 
 void Adjacency_List::dijkstra(pair_pqueue& pq, pair_vector& cost_prev)
 {
-    auto vertex{ pq.top() };
+	int v_index{ pq.top().second };
     pq.pop();
 
-    int v_cost{ vertex.first }, v_index{ vertex.second };
-    auto neighbours{ extract_neighbours(v_index) };
+    auto neighbours{ get_neighbours(v_index) };
 
     int updated_weight;
-    for(auto n_it{ neighbours.begin() }; n_it != neighbours.end(); ++n_it)
+    for(auto& n_it: neighbours)
     {
-        bool cost_updated{ update_cost(cost_prev, v_index, (*n_it)) };
+        bool cost_updated{ update_cost(cost_prev, v_index, n_it) };
         if(cost_updated)
         {
-            updated_weight = cost_prev.at((*n_it)).first;
-            pq.push(std::pair<int,int>(updated_weight, (*n_it)));
+            updated_weight = cost_prev.at(n_it).first;
+            pq.push(std::pair<int,int>(updated_weight, n_it));
         }             
     }
 }
 
-std::vector<int> Adjacency_List::extract_neighbours(const int node)
+std::vector<int> Adjacency_List::get_neighbours(const int node) const
 {
-    auto out_neighbours{ std::vector<int>() };
+    auto neighbours{ std::vector<int>() };
 
-    auto list_it{ a_list_.at(node).begin() };
-    auto it_end{ a_list_.at(node).end() };
     int index;
-    for(; list_it != it_end; ++list_it)
+	for (auto& list_it : a_list_.at(node))
     {
-        index = (*list_it).get_end_node();
-        out_neighbours.push_back(index);
+        index = list_it.get_end_node();
+        neighbours.push_back(index);
     }
-    return out_neighbours;
+    return neighbours;
 }
 
 bool Adjacency_List::update_cost(pair_vector& cost_prev, const int source, const int neighbour)
 {
-    int base_cost{ cost_prev.at(source).first };
-    int travel_cost{ get_travel_cost(source, neighbour) };
-    int updated_cost{ base_cost + travel_cost };
-    int current_cost{ cost_prev.at(neighbour).first };
+    const int base_cost{ cost_prev.at(source).first };
+    const int travel_cost{ get_travel_cost(source, neighbour) };
+    const int updated_cost{ base_cost + travel_cost };
+    const int current_cost{ cost_prev.at(neighbour).first };
 
     if(updated_cost < current_cost)
     {
@@ -165,13 +152,11 @@ bool Adjacency_List::update_cost(pair_vector& cost_prev, const int source, const
 
 int Adjacency_List::get_travel_cost(const int start_v, const int neighbour) const
 {
-    auto list_it{ a_list_.at(start_v).begin() };
-    auto list_end{ a_list_.at(start_v).end() };
-
-    for(; list_it != list_end; ++list_it)
-        if((*list_it).get_end_node() == neighbour)
-            return (*list_it).get_weight();
-
+	for (auto& list_it : a_list_.at(start_v))
+	{
+		if (list_it.get_end_node() == neighbour)
+			return list_it.get_weight();
+	}
     return -1;
 }
 
@@ -213,7 +198,7 @@ void Adjacency_List::bf_relaxation(std::deque<int>& vertex_q, Adjacency_List::pa
 	int vertex{ vertex_q.front() };
 	vertex_q.pop_front();
 	
-	std::vector<int> neighbours{ extract_neighbours(vertex) };
+	std::vector<int> neighbours{ get_neighbours(vertex) };
 
 	bool updated_f{false};
 	for(auto& neighbour : neighbours)
@@ -229,8 +214,10 @@ void Adjacency_List::slf_push(std::deque<int>& vertex_q, const int vertex)
     auto find_v{ std::find(vertex_q.begin(), vertex_q.end(), vertex) };
     bool exists{ find_v != vertex_q.end() };
 
-	if (vertex < vertex_q.front() && !exists)
+	if(vertex_q.empty())
+		vertex_q.push_back(vertex);
+	else if (vertex < vertex_q.front() && !exists)
 		vertex_q.push_front(vertex);
-	else if(!exists)
+	else if (!exists)
 		vertex_q.push_back(vertex);
 }

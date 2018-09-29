@@ -33,7 +33,7 @@ private:
     void dijkstra(pair_pqueue& pq, pair_vector& cost_prev);
     bool pre_dijkstra_checks();
     bool negative_weights();
-    std::vector<int> extract_neighbours(const int vertex);
+    std::vector<int> get_neighbours(const int vertex) const;
     void init_costs(pair_vector& cost_prev, const int start_v);
     bool update_cost(pair_vector& cost_prev, const int source, const int neighbour);
     int get_travel_cost(const int start_v, const int neighbour) const;

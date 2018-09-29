@@ -31,7 +31,7 @@ std::vector<Edge> File_Handler::load_from_file()
             in_file.close();
         }
     }
-    catch(const std::ifstream::failure& e)
+    catch(const std::ifstream::failure&)
     {
         error_msg_ = "Could not open the file.";
         return std::vector<Edge>();

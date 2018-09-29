@@ -23,17 +23,9 @@ const std::vector<int>& Adjacency_Matrix::operator[](const int index) const
 
 bool Adjacency_Matrix::operator==(const Adjacency_Matrix& rhs) const
 {
-	if (a_matrix_.size() != rhs.a_matrix_.size())
-		return false;
-
-	auto rhs_it{ rhs.a_matrix_.begin() };
-	for(auto& mat_it : a_matrix_)
-	{
-	    if(mat_it != (*rhs_it))
-	        return false;
-	    ++rhs_it;
-	}
-	return true;    
+	if (a_matrix_ == rhs.a_matrix_)
+		return true;
+	return false;
 }
 
 bool Adjacency_Matrix::operator!=(const Adjacency_Matrix& rhs) const
@@ -78,14 +70,10 @@ std::vector<std::pair<int, int>> Adjacency_Matrix::dijkstra(const int start_v)
 {
     if(pre_dijkstra_checks())
     {
-        auto pq{ pair_p_queue() };
-        pq.push(std::pair<int,int>(0, start_v));
-
         auto cost_prev{ pair_vector() };
         init_costs(cost_prev, start_v);
-        while(!pq.empty())
-            dijkstra(pq, cost_prev);
 
+		dijkstra(cost_prev, start_v);
         return cost_prev;
     }
     return pair_vector();
@@ -123,26 +111,35 @@ void Adjacency_Matrix::init_costs(pair_vector& cost_prev, const int start_v)
     cost_prev.at(start_v).second = start_v;
 }
 
-void Adjacency_Matrix::dijkstra(pair_p_queue& pq, pair_vector& cost_prev)
+void Adjacency_Matrix::dijkstra(pair_vector& cost_prev, const int start_v)
 {
-    int v_index{ pq.top().second };
-	pq.pop();
+	auto pq{ pair_p_queue() };
+	pq.push(std::pair<int, int>(0, start_v));
 
-    auto neighbours{ extract_neighbours(v_index) };
-
-    int updated_weight;
-    for(auto& n_it : neighbours)
-    {
-        bool cost_updated{ update_cost(cost_prev, v_index, n_it) };
-        if(cost_updated)
-        {
-            updated_weight = cost_prev.at(n_it).first;
-            pq.push(std::pair<int,int>(updated_weight, n_it));
-        }             
-    }
+	while (!pq.empty())
+		dijkstra_relaxation(pq, cost_prev);
 }
 
-std::vector<int> Adjacency_Matrix::extract_neighbours(const int node)
+void Adjacency_Matrix::dijkstra_relaxation(pair_p_queue & pq, pair_vector & cost_prev)
+{
+	int v_index{ pq.top().second };
+	pq.pop();
+
+	auto neighbours{ get_neighbours(v_index) };
+
+	int updated_weight;
+	for (auto& n_it : neighbours)
+	{
+		bool cost_updated{ update_cost(cost_prev, v_index, n_it) };
+		if (cost_updated)
+		{
+			updated_weight = cost_prev.at(n_it).first;
+			pq.push(std::pair<int, int>(updated_weight, n_it));
+		}
+	}
+}
+
+std::vector<int> Adjacency_Matrix::get_neighbours(const int node) const
 {
     auto out_neighbours{ std::vector<int>() };
 
@@ -212,7 +209,7 @@ void Adjacency_Matrix::bf_relaxation(std::deque<int>& vertex_q, Adjacency_Matrix
 	int vertex{ vertex_q.front() };
 	vertex_q.pop_front();
 	
-	std::vector<int> neighbours{ extract_neighbours(vertex) };
+	std::vector<int> neighbours{ get_neighbours(vertex) };
 
 	bool updated_f{false};
 	for(auto& neighbour : neighbours)
@@ -228,8 +225,10 @@ void Adjacency_Matrix::slf_push(std::deque<int>& vertex_q, const int vertex)
     auto find_v{ std::find(vertex_q.begin(), vertex_q.end(), vertex) };
     bool exists{ find_v != vertex_q.end() };
 
-	if (vertex < vertex_q.front() && !exists)
+	if (vertex_q.empty())
+		vertex_q.push_back(vertex);
+	else if (vertex < vertex_q.front() && !exists)
 		vertex_q.push_front(vertex);
-	else if(!exists)
+	else if (!exists)
 		vertex_q.push_back(vertex);
 }

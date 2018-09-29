@@ -36,8 +36,9 @@ private:
 
     bool pre_dijkstra_checks();
     bool negative_weights();
-    void dijkstra(pair_p_queue& pq, pair_vector& cost_prev);
-    std::vector<int> extract_neighbours(const int vertex);
+    void dijkstra(pair_vector& cost_prev, const int start_v);
+	void dijkstra_relaxation(pair_p_queue& pq, pair_vector& cost_prev);
+    std::vector<int> get_neighbours(const int vertex) const;
     void init_costs(pair_vector& cost_prev, const int start_v);
     bool update_cost(pair_vector& cost_prev, const int source, const int neighbour);
 
