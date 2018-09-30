@@ -84,3 +84,20 @@ TEST(B_Ford_Matrix, negative_cycle)
     auto expected{ std::vector<std::pair<int, int>>() };
     EXPECT_EQ(expected, actual);
 }
+
+TEST(Prim_Matrix, undir1)
+{
+	auto handler{ File_Handler("../data/undir1.txt") };
+	auto test_matrix{ Adjacency_Matrix(handler.load_from_file()) };
+	auto actual{ Adjacency_Matrix(test_matrix.prim(0)) };
+
+	auto expected_input{ std::vector<std::vector<int>> (5, std::vector<int>(5)) };
+	expected_input.at(0).at(4) = 1;
+	expected_input.at(4).at(1) = 1;
+	expected_input.at(1).at(2) = 2;
+	expected_input.at(2).at(3) = 1;
+	auto expected{ Adjacency_Matrix(expected_input) };
+	EXPECT_EQ(expected, actual);
+	std::cout << "\n\n\n" << expected.to_string() << "\n\n\n";
+	std::cout << actual.to_string() << "\n\n\n";
+}

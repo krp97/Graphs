@@ -38,6 +38,19 @@ int Adjacency_Matrix::get_size() const
     return a_matrix_.size();
 }
 
+std::string Adjacency_Matrix::to_string() const
+{
+	auto out{ std::string() };
+	for (auto& rows : a_matrix_)
+	{
+		for (auto& cols : rows)
+			out += std::to_string(cols) + ", ";
+		out += "\n";
+	}
+
+	return out;
+}
+
 int Adjacency_Matrix::find_highest_vertex(const std::vector<Edge>& data) const
 {
     int index{0};
@@ -180,14 +193,15 @@ Adjacency_Matrix::pair_vector Adjacency_Matrix::bellman_ford(const int start_v)
 
 		pair_vector cost_prev{ pair_vector() };
 		init_costs(cost_prev, start_v);
-        
-		return bellman_ford(vertex_q, cost_prev);
+		bellman_ford(vertex_q, cost_prev);
+
+		return cost_prev;
 	}
 	else
 		return pair_vector();
 }
 
-Adjacency_Matrix::pair_vector Adjacency_Matrix::bellman_ford(std::deque<int>& vertex_q, Adjacency_Matrix::pair_vector& cost_prev)
+void Adjacency_Matrix::bellman_ford(std::deque<int>& vertex_q, Adjacency_Matrix::pair_vector& cost_prev)
 {
     // Each node is pushed to the queue at most V - 1 times.
     size_t nodes{ a_matrix_.size() };
@@ -196,12 +210,14 @@ Adjacency_Matrix::pair_vector Adjacency_Matrix::bellman_ford(std::deque<int>& ve
 
 	while (!vertex_q.empty())
 	{
-        if(negative_cycle == 0)
-            return pair_vector();
+		if (negative_cycle == 0)
+		{
+			cost_prev = pair_vector();
+			break;
+		}
         negative_cycle--;
 		bf_relaxation(vertex_q, cost_prev);
 	}
-	return cost_prev;
 }
 
 void Adjacency_Matrix::bf_relaxation(std::deque<int>& vertex_q, Adjacency_Matrix::pair_vector& cost_prev)
@@ -235,24 +251,54 @@ void Adjacency_Matrix::slf_push(std::deque<int>& vertex_q, const int vertex)
 
 std::vector<Edge> Adjacency_Matrix::prim(const int start_v)
 {
-    auto tree{ std::vector<Edge>() };
-    auto edge_heap{ std::vector<Edge>() };
-    auto visited{ std::vector<bool>(a_matrix_.size(), false) };
-    visited.at(start_v) = true;
+	if (a_matrix_.size() > 0)
+	{
+		auto tree{ std::vector<Edge>() };
+		auto visited{ std::vector<bool>(a_matrix_.size(), false) };
+		visited.at(start_v) = true;
+		prim(tree, visited);
+
+		return tree;
+	}
+	else
+		return std::vector<Edge>();
 }
 
-std::vector<Edge> Adjacency_Matrix::prim(std::vector<Edge>& tree, std::vector<Edge>& edge_heap)
+void Adjacency_Matrix::prim(std::vector<Edge>& tree, std::vector<bool>& visited)
 {
+	auto edge_heap{ edge_p_queue() };
 
+	for (size_t i{ a_matrix_.size() - 1 }; i > 0; --i)
+	{
+		update_edge_heap(edge_heap, visited);
+		auto mst_e{ edge_heap.top() };
+		tree.push_back(mst_e);
+		visited.at(mst_e.get_end()) = true;
+		
+		edge_heap.pop();
+	}
 }
 
-void Adjacency_Matrix::update_edge_heap(std::vector<Edge>& edge_heap, const std::vector<bool>& visited)
+void Adjacency_Matrix::update_edge_heap(Adjacency_Matrix::edge_p_queue& edge_heap, const std::vector<bool>& visited)
 {
-    int index{0};
-    for(const auto& v_it: visited)
-    {
-        if(v_it)
+	for (size_t i{ 0 }; i < visited.size(); ++i)
+	{
+		if (visited.at(i))
+			add_to_heap(i, edge_heap, visited);
+	}
+}
 
-        ++index;
-    }
+void Adjacency_Matrix::add_to_heap(const unsigned index, Adjacency_Matrix::edge_p_queue& edge_heap, const std::vector<bool>& visited)
+{
+	auto neighbours{ get_neighbours(index) };
+
+	int weight{ 0 };
+	for (auto& n_it: neighbours)
+	{
+		if (!visited.at(n_it))
+		{
+			weight = a_matrix_.at(index).at(n_it);
+			edge_heap.push(Edge(index, n_it, weight));
+		}
+	}
 }

@@ -11,6 +11,7 @@
 class Adjacency_Matrix{
 
     using pair_p_queue = std::priority_queue<std::pair<int, int>>;
+	using edge_p_queue = std::priority_queue < Edge, std::vector<Edge>, Edge::compare >;
     using pair_vector = std::vector<std::pair<int, int>>;
 
 public:
@@ -23,6 +24,7 @@ public:
     const std::vector<int>& operator[](const int index) const;
 
     int get_size() const;
+	std::string to_string() const;
 
     pair_vector dijkstra(const int start_v);
 	pair_vector bellman_ford(const int start_v);
@@ -43,10 +45,11 @@ private:
     void init_costs(pair_vector& cost_prev, const int start_v);
     bool update_cost(pair_vector& cost_prev, const int source, const int neighbour);
 
-	pair_vector bellman_ford(std::deque<int>& vertex_q, pair_vector& cost_prev);
+	void bellman_ford(std::deque<int>& vertex_q, pair_vector& cost_prev);
 	void bf_relaxation(std::deque<int>& vertex_q, pair_vector& cost_prev);
 	void slf_push(std::deque<int> &vertex_q, const int neighbour);
 
-    std::vector<Edge> prim(std::vector<Edge>& tree, std::vector<Edge>& edge_heap);
-    void update_edge_heap(std::vector<Edge>& edge_heap, const std::vector<bool>& visited);
+    void prim(std::vector<Edge>& tree, std::vector<bool>& visited);
+    void update_edge_heap(edge_p_queue& edge_heap, const std::vector<bool>& visited);
+	void add_to_heap(const unsigned index, edge_p_queue& edge_heap, const std::vector<bool>& visited);
 };
