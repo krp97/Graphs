@@ -26,6 +26,7 @@ public:
 
     pair_vector dijkstra(const int start_v);
 	pair_vector bellman_ford(const int start_v);
+    std::vector<Edge> prim(const int start_v);
 
 private:
 
@@ -45,4 +46,7 @@ private:
 	pair_vector bellman_ford(std::deque<int>& vertex_q, pair_vector& cost_prev);
 	void bf_relaxation(std::deque<int>& vertex_q, pair_vector& cost_prev);
 	void slf_push(std::deque<int> &vertex_q, const int neighbour);
+
+    std::vector<Edge> prim(std::vector<Edge>& tree, std::vector<Edge>& edge_heap);
+    void update_edge_heap(std::vector<Edge>& edge_heap, const std::vector<bool>& visited);
 };

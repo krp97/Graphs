@@ -232,3 +232,27 @@ void Adjacency_Matrix::slf_push(std::deque<int>& vertex_q, const int vertex)
 	else if (!exists)
 		vertex_q.push_back(vertex);
 }
+
+std::vector<Edge> Adjacency_Matrix::prim(const int start_v)
+{
+    auto tree{ std::vector<Edge>() };
+    auto edge_heap{ std::vector<Edge>() };
+    auto visited{ std::vector<bool>(a_matrix_.size(), false) };
+    visited.at(start_v) = true;
+}
+
+std::vector<Edge> Adjacency_Matrix::prim(std::vector<Edge>& tree, std::vector<Edge>& edge_heap)
+{
+
+}
+
+void Adjacency_Matrix::update_edge_heap(std::vector<Edge>& edge_heap, const std::vector<bool>& visited)
+{
+    int index{0};
+    for(const auto& v_it: visited)
+    {
+        if(v_it)
+
+        ++index;
+    }
+}

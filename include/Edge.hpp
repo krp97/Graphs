@@ -13,6 +13,8 @@ public:
 
     bool operator==(const Edge& rhs) const;
     bool operator!=(const Edge& rhs) const;
+    bool operator<(const Edge& rhs) const;
+    bool operator>(const Edge& rhs) const;
 
 private:
     int start_;

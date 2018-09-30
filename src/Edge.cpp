@@ -21,6 +21,19 @@ bool Edge::operator!=(const Edge& rhs) const
     return !(*this == rhs);
 }
 
+bool Edge::operator<(const Edge& rhs) const
+{
+    if(weight_ < rhs.weight_)
+        return true;
+    else
+        return false;
+}
+
+bool Edge::operator>(const Edge& rhs) const
+{
+    return !((*this) < rhs);
+}
+
 int Edge::get_start() const
 {
     return start_;
