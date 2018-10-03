@@ -26,7 +26,7 @@ TEST(Dijkstra_Matrix, one_edge_loop)
     EXPECT_EQ(expected, actual);
 }
 
-TEST(Dijkstra_Matrix, file_undir1)
+TEST(Dijkstra_Matrix, undirected)
 {   
     auto handler{ File_Handler("../data/undir1.txt") };
     auto test_matrix{ Adjacency_Matrix(handler.load_from_file()) };
@@ -39,7 +39,7 @@ TEST(Dijkstra_Matrix, file_undir1)
     EXPECT_EQ(expected, actual);
 }
 
-TEST(Dijkstra_Matrix, file_directed2)
+TEST(Dijkstra_Matrix, directed)
 {
 	auto handler{ File_Handler("../data/directed2.txt") };
 	auto test_matrix{ Adjacency_Matrix(handler.load_from_file()) };
@@ -73,7 +73,7 @@ TEST(B_Ford_Matrix, one_edge_loop)
 	EXPECT_EQ(expected, actual);
 }
 
-TEST(B_Ford_Matrix, file_undir1)
+TEST(B_Ford_Matrix, undirected)
 {
 	auto handler{ File_Handler("../data/undir1.txt") };
 	auto test_matrix{ Adjacency_Matrix(handler.load_from_file()) };
@@ -86,7 +86,7 @@ TEST(B_Ford_Matrix, file_undir1)
     EXPECT_EQ(expected, actual);
 }
 
-TEST(B_Ford_Matrix, file_directed2)
+TEST(B_Ford_Matrix, directed)
 {
 	auto handler{ File_Handler("../data/directed2.txt") };
 	auto test_matrix{ Adjacency_Matrix(handler.load_from_file()) };

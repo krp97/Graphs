@@ -20,6 +20,16 @@ bool Node::operator!=(const Node& rhs) const
     return !(*this == rhs);
 }
 
+bool Node::operator<(const Node& rhs) const
+{
+    return weight_ < rhs.weight_ ? true : false;
+}
+
+bool Node::operator>(const Node& rhs) const
+{
+    return weight_ > rhs.weight_ ? true : false;
+}
+
 int Node::get_end_node() const
 {
     return end_node_;

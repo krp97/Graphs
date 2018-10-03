@@ -40,6 +40,8 @@ target_sources(${PROJECT_TEST_NAME}
     "${CMAKE_SOURCE_DIR}/test/adjacency_list_test.cpp"
     "${CMAKE_SOURCE_DIR}/test/spt_matrix_test.cpp"
     "${CMAKE_SOURCE_DIR}/test/spt_list_test.cpp"
+    "${CMAKE_SOURCE_DIR}/test/mst_matrix_test.cpp"
+    "${CMAKE_SOURCE_DIR}/test/mst_list_test.cpp"
     "${CMAKE_SOURCE_DIR}/test/file_handler_test.cpp"
     "${CMAKE_SOURCE_DIR}/src/adjacency_matrix.cpp"
     "${CMAKE_SOURCE_DIR}/src/adjacency_list.cpp"
