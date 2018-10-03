@@ -1,4 +1,4 @@
-#include "../include/Node.hpp"
+#include "../include/node.hpp"
 
 Node::Node(int end_node, int weight)
     : end_node_{ end_node }, weight_{ weight }

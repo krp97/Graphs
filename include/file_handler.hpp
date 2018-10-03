@@ -3,9 +3,9 @@
 #include <string>
 #include <fstream>
 
-#include "Adjacency_Matrix.hpp"
-#include "Adjacency_List.hpp"
-#include "Edge.hpp"
+#include "adjacency_matrix.hpp"
+#include "adjacency_list.hpp"
+#include "edge.hpp"
 
 class File_Handler{
 

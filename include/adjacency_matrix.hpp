@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <string>
 
-#include "../include/Edge.hpp"
+#include "../include/edge.hpp"
 
 class Adjacency_Matrix{
 
@@ -24,14 +24,12 @@ public:
     const std::vector<int>& operator[](const int index) const;
 
     int get_size() const;
-	std::string to_string() const;
 
     pair_vector dijkstra(const int start_v);
 	pair_vector bellman_ford(const int start_v);
     std::vector<Edge> prim(const int start_v);
 
 private:
-
     std::vector<std::vector<int>> a_matrix_;
 
     int find_highest_vertex(const std::vector<Edge>& data) const;
@@ -50,6 +48,6 @@ private:
 	void slf_push(std::deque<int> &vertex_q, const int neighbour);
 
     void prim(std::vector<Edge>& tree, std::vector<bool>& visited);
-    void update_edge_heap(edge_p_queue& edge_heap, const std::vector<bool>& visited);
-	void add_to_heap(const unsigned index, edge_p_queue& edge_heap, const std::vector<bool>& visited);
+    void update_edge_queue(edge_p_queue& edge_heap, const std::vector<bool>& visited);
+	void add_to_queue(const unsigned index, edge_p_queue& edge_heap, const std::vector<bool>& visited);
 };

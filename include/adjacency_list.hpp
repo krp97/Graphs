@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Node.hpp"
-#include "Edge.hpp"
+#include "node.hpp"
+#include "edge.hpp"
 
 #include <list>
 #include <vector>
@@ -10,6 +10,7 @@
 class Adjacency_List{
 
     using pair_pqueue = std::priority_queue<std::pair<int,int>>;
+    using edge_p_queue = std::priority_queue < Edge, std::vector<Edge>, Edge::compare >;
     using pair_vector = std::vector<std::pair<int,int>>;
 
 public:
@@ -23,6 +24,7 @@ public:
 
     pair_vector dijkstra(const int start_v);
 	pair_vector bellman_ford(const int start_v);
+    std::vector<Edge> prim(const int start_v);
 
 private:
     std::vector<std::list<Node>> a_list_;
@@ -41,4 +43,8 @@ private:
     pair_vector bellman_ford(std::deque<int>& vertex_q, pair_vector& cost_prev);
 	void bf_relaxation(std::deque<int>& vertex_q, pair_vector& cost_prev);
 	void slf_push(std::deque<int> &vertex_q, const int neighbour);
+
+    void prim(std::vector<Edge>& tree, std::vector<bool>& visited);
+    void update_edge_queue(edge_p_queue& edge_heap, const std::vector<bool>& visited);
+	void add_to_queue(const unsigned index, edge_p_queue& edge_heap, const std::vector<bool>& visited);
 };

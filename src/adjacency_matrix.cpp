@@ -1,8 +1,8 @@
 #include <climits>
 #include <iostream>
 
-#include "../include/Adjacency_Matrix.hpp"
-#include "../include/File_Handler.hpp"
+#include "../include/adjacency_matrix.hpp"
+#include "../include/file_handler.hpp"
 
 Adjacency_Matrix::Adjacency_Matrix(std::vector<std::vector<int>> matrix)
     : a_matrix_{ matrix }
@@ -36,19 +36,6 @@ bool Adjacency_Matrix::operator!=(const Adjacency_Matrix& rhs) const
 int Adjacency_Matrix::get_size() const
 {
     return a_matrix_.size();
-}
-
-std::string Adjacency_Matrix::to_string() const
-{
-	auto out{ std::string() };
-	for (auto& rows : a_matrix_)
-	{
-		for (auto& cols : rows)
-			out += std::to_string(cols) + ", ";
-		out += "\n";
-	}
-
-	return out;
 }
 
 int Adjacency_Matrix::find_highest_vertex(const std::vector<Edge>& data) const
@@ -266,29 +253,29 @@ std::vector<Edge> Adjacency_Matrix::prim(const int start_v)
 
 void Adjacency_Matrix::prim(std::vector<Edge>& tree, std::vector<bool>& visited)
 {
-	auto edge_heap{ edge_p_queue() };
+	auto edge_q{ edge_p_queue() };
 
 	for (size_t i{ a_matrix_.size() - 1 }; i > 0; --i)
 	{
-		update_edge_heap(edge_heap, visited);
-		auto mst_e{ edge_heap.top() };
+		update_edge_queue(edge_q, visited);
+		auto mst_e{ edge_q.top() };
 		tree.push_back(mst_e);
 		visited.at(mst_e.get_end()) = true;
 		
-		edge_heap.pop();
+		edge_q.pop();
 	}
 }
 
-void Adjacency_Matrix::update_edge_heap(Adjacency_Matrix::edge_p_queue& edge_heap, const std::vector<bool>& visited)
+void Adjacency_Matrix::update_edge_queue(Adjacency_Matrix::edge_p_queue& edge_q, const std::vector<bool>& visited)
 {
 	for (size_t i{ 0 }; i < visited.size(); ++i)
 	{
 		if (visited.at(i))
-			add_to_heap(i, edge_heap, visited);
+			add_to_queue(i, edge_q, visited);
 	}
 }
 
-void Adjacency_Matrix::add_to_heap(const unsigned index, Adjacency_Matrix::edge_p_queue& edge_heap, const std::vector<bool>& visited)
+void Adjacency_Matrix::add_to_queue(const unsigned index, Adjacency_Matrix::edge_p_queue& edge_q, const std::vector<bool>& visited)
 {
 	auto neighbours{ get_neighbours(index) };
 
@@ -298,7 +285,7 @@ void Adjacency_Matrix::add_to_heap(const unsigned index, Adjacency_Matrix::edge_
 		if (!visited.at(n_it))
 		{
 			weight = a_matrix_.at(index).at(n_it);
-			edge_heap.push(Edge(index, n_it, weight));
+			edge_q.push(Edge(index, n_it, weight));
 		}
 	}
 }

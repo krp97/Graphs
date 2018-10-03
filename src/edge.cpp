@@ -1,4 +1,4 @@
-#include "../include/Edge.hpp"
+#include "../include/edge.hpp"
 
 Edge::Edge(int start, int end, int weight)
     : start_{ start }, end_{ end }, weight_{ weight }

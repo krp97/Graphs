@@ -11,19 +11,19 @@ project(graphs
 set(CMAKE_BUILD_TYPE Debug)
 
 set(HEADERS
-	${CMAKE_SOURCE_DIR}/include/Adjacency_List.hpp
-	${CMAKE_SOURCE_DIR}/include/Adjacency_Matrix.hpp
-	${CMAKE_SOURCE_DIR}/include/Node.hpp
-	${CMAKE_SOURCE_DIR}/include/File_Handler.hpp
-	${CMAKE_SOURCE_DIR}/include/Edge.hpp)
+	${CMAKE_SOURCE_DIR}/include/adjacency_list.hpp
+	${CMAKE_SOURCE_DIR}/include/adjacency_matrix.hpp
+	${CMAKE_SOURCE_DIR}/include/node.hpp
+	${CMAKE_SOURCE_DIR}/include/file_handler.hpp
+	${CMAKE_SOURCE_DIR}/include/edge.hpp)
 
 set(SOURCES
     ${CMAKE_SOURCE_DIR}/src/main.cpp
-    ${CMAKE_SOURCE_DIR}/src/Adjacency_Matrix.cpp
-    ${CMAKE_SOURCE_DIR}/src/Adjacency_List.cpp
-    ${CMAKE_SOURCE_DIR}/src/Node.cpp
-    ${CMAKE_SOURCE_DIR}/src/File_Handler.cpp
-    ${CMAKE_SOURCE_DIR}/src/Edge.cpp)
+    ${CMAKE_SOURCE_DIR}/src/adjacency_matrix.cpp
+    ${CMAKE_SOURCE_DIR}/src/adjacency_list.cpp
+    ${CMAKE_SOURCE_DIR}/src/node.cpp
+    ${CMAKE_SOURCE_DIR}/src/file_handler.cpp
+    ${CMAKE_SOURCE_DIR}/src/edge.cpp)
 
 add_executable(graphs ${SOURCES} ${HEADERS})
 
@@ -36,16 +36,16 @@ add_executable(${PROJECT_TEST_NAME})
 
 target_sources(${PROJECT_TEST_NAME}
   PRIVATE  
-    "${CMAKE_SOURCE_DIR}/test/Adjacency_Matrix_test.cpp"
-    "${CMAKE_SOURCE_DIR}/test/Adjacency_List_test.cpp"
-    "${CMAKE_SOURCE_DIR}/test/SPT_Matrix_test.cpp"
-    "${CMAKE_SOURCE_DIR}/test/SPT_List_test.cpp"
-    "${CMAKE_SOURCE_DIR}/test/File_Handler_test.cpp"
-    "${CMAKE_SOURCE_DIR}/src/Adjacency_Matrix.cpp"
-    "${CMAKE_SOURCE_DIR}/src/Adjacency_List.cpp"
-    "${CMAKE_SOURCE_DIR}/src/File_Handler.cpp"
-    "${CMAKE_SOURCE_DIR}/src/Edge.cpp"
-    "${CMAKE_SOURCE_DIR}/src/Node.cpp")
+    "${CMAKE_SOURCE_DIR}/test/adjacency_matrix_test.cpp"
+    "${CMAKE_SOURCE_DIR}/test/adjacency_list_test.cpp"
+    "${CMAKE_SOURCE_DIR}/test/spt_matrix_test.cpp"
+    "${CMAKE_SOURCE_DIR}/test/spt_list_test.cpp"
+    "${CMAKE_SOURCE_DIR}/test/file_handler_test.cpp"
+    "${CMAKE_SOURCE_DIR}/src/adjacency_matrix.cpp"
+    "${CMAKE_SOURCE_DIR}/src/adjacency_list.cpp"
+    "${CMAKE_SOURCE_DIR}/src/file_handler.cpp"
+    "${CMAKE_SOURCE_DIR}/src/edge.cpp"
+    "${CMAKE_SOURCE_DIR}/src/node.cpp")
 
 target_include_directories(${PROJECT_TEST_NAME} 
   PRIVATE ${GTEST_INCLUDE_DIRS}

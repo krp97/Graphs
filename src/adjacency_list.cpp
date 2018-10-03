@@ -1,4 +1,5 @@
-#include "../include/Adjacency_List.hpp"
+#include "../include/adjacency_list.hpp"
+
 #include <algorithm>
 #include <climits>
 #include <math.h>
@@ -220,4 +221,56 @@ void Adjacency_List::slf_push(std::deque<int>& vertex_q, const int vertex)
 		vertex_q.push_front(vertex);
 	else if (!exists)
 		vertex_q.push_back(vertex);
+}
+
+std::vector<Edge> Adjacency_List::prim(const int start_v)
+{
+	if (a_list_.size() > 0)
+	{
+		auto tree{ std::vector<Edge>() };
+		auto visited{ std::vector<bool>(a_list_.size(), false) };
+		visited.at(start_v) = true;
+		prim(tree, visited);
+
+		return tree;
+	}
+	else
+		return std::vector<Edge>();
+}
+
+void Adjacency_List::prim(std::vector<Edge>& tree, std::vector<bool>& visited)
+{
+	auto edge_q{ edge_p_queue() };
+
+	for (size_t i{ a_list_.size() - 1 }; i > 0; --i)
+	{
+		update_edge_queue(edge_q, visited);
+		auto mst_e{ edge_q.top() };
+		tree.push_back(mst_e);
+		visited.at(mst_e.get_end()) = true;
+		
+		edge_q.pop();
+	}
+}
+
+void Adjacency_List::update_edge_queue(Adjacency_List::edge_p_queue& edge_q, const std::vector<bool>& visited)
+{
+	for (size_t i{ 0 }; i < visited.size(); ++i)
+	{
+		if (visited.at(i))
+			add_to_queue(i, edge_q, visited);
+	}
+}
+
+void Adjacency_List::add_to_queue(const unsigned index, Adjacency_List::edge_p_queue& edge_q, const std::vector<bool>& visited)
+{
+	int weight{ 0 };
+	for (auto& n_it: a_list_.at(index))
+	{
+		if (!visited.at(n_it.get_end_node()))
+		{
+			weight = n_it.get_weight();
+			edge_q.push(Edge(index, n_it.get_end_node(), weight));
+		}
+	}
 }
