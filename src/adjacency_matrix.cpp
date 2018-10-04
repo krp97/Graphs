@@ -70,7 +70,7 @@ std::vector<std::pair<int, int>> Adjacency_Matrix::dijkstra(const int start_v)
 {
     if(pre_dijkstra_checks())
     {
-        auto cost_prev{ pair_vector() };
+        auto cost_prev{ pair_vector(a_matrix_.size()) };
         init_costs(cost_prev, start_v);
 
 		dijkstra(cost_prev, start_v);
@@ -104,8 +104,8 @@ bool Adjacency_Matrix::negative_weights()
 
 void Adjacency_Matrix::init_costs(pair_vector& cost_prev, const int start_v)
 {
-    for(auto& rows : a_matrix_)
-        cost_prev.push_back(std::pair<int,int>(INT_MAX, INT_MAX));
+	for(auto& p : cost_prev)
+		p = std::pair<int, int>(INT_MAX, INT_MAX);
 
     cost_prev.at(start_v).first = 0;
     cost_prev.at(start_v).second = start_v;
@@ -178,7 +178,7 @@ Adjacency_Matrix::pair_vector Adjacency_Matrix::bellman_ford(const int start_v)
 		std::deque<int> vertex_q{ std::deque<int>() };
 		vertex_q.push_front(start_v);
 
-		pair_vector cost_prev{ pair_vector() };
+		pair_vector cost_prev{ pair_vector(a_matrix_.size()) };
 		init_costs(cost_prev, start_v);
 		bellman_ford(vertex_q, cost_prev);
 
