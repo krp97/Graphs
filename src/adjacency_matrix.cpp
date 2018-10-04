@@ -38,6 +38,18 @@ int Adjacency_Matrix::get_size() const
     return a_matrix_.size();
 }
 
+std::string Adjacency_Matrix::to_string() const
+{
+	auto out{ std::string() };
+	for(auto& rows : a_matrix_)
+	{
+		for(auto& cols : rows)
+			out += std::to_string(cols) + ", ";
+		out += "\n";
+	}
+	return out;
+}
+
 int Adjacency_Matrix::find_highest_vertex(const std::vector<Edge>& data) const
 {
     int index{0};
@@ -243,8 +255,11 @@ std::vector<Edge> Adjacency_Matrix::prim(const int start_v)
 		auto tree{ std::vector<Edge>() };
 		auto visited{ std::vector<bool>(a_matrix_.size(), false) };
 		visited.at(start_v) = true;
-		prim(tree, visited);
 
+		Adjacency_Matrix clean_matrix{*this};
+		clean_matrix.remove_loops();
+		clean_matrix.prim(tree, visited);
+		add_reverse_edges(tree);
 		return tree;
 	}
 	else
@@ -264,6 +279,12 @@ void Adjacency_Matrix::prim(std::vector<Edge>& tree, std::vector<bool>& visited)
 		
 		edge_q.pop();
 	}
+}
+
+void Adjacency_Matrix::remove_loops()
+{
+	for(int i{0}; i < a_matrix_.size(); ++i)
+		a_matrix_.at(i).at(i) = 0;
 }
 
 void Adjacency_Matrix::update_edge_queue(Adjacency_Matrix::edge_p_queue& edge_q, const std::vector<bool>& visited)
@@ -288,4 +309,11 @@ void Adjacency_Matrix::add_to_queue(const unsigned index, Adjacency_Matrix::edge
 			edge_q.push(Edge(index, n_it, weight));
 		}
 	}
+}
+
+void Adjacency_Matrix::add_reverse_edges(std::vector<Edge>& tree)
+{
+	std::vector<Edge> temp_tree{ tree };
+	for(auto& e : temp_tree)
+		tree.push_back(Edge(e.get_end(), e.get_start(), e.get_weight()));
 }

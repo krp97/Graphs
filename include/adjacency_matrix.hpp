@@ -24,6 +24,7 @@ public:
     const std::vector<int>& operator[](const int index) const;
 
     int get_size() const;
+    std::string to_string() const;
 
     pair_vector dijkstra(const int start_v);
 	pair_vector bellman_ford(const int start_v);
@@ -48,6 +49,8 @@ private:
 	void slf_push(std::deque<int> &vertex_q, const int neighbour);
 
     void prim(std::vector<Edge>& tree, std::vector<bool>& visited);
+    void remove_loops();
     void update_edge_queue(edge_p_queue& edge_heap, const std::vector<bool>& visited);
 	void add_to_queue(const unsigned index, edge_p_queue& edge_heap, const std::vector<bool>& visited);
+    void add_reverse_edges(std::vector<Edge>& tree);
 };
