@@ -238,6 +238,11 @@ std::vector<Edge> Adjacency_List::prim(const int start_v)
 		return std::vector<Edge>();
 }
 
+void Adjacency_List::remove_loops()
+{
+                                                                                                                     
+}
+
 void Adjacency_List::prim(std::vector<Edge>& tree, std::vector<bool>& visited)
 {
 	auto edge_q{ edge_p_queue() };

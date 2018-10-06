@@ -45,6 +45,9 @@ private:
 	void slf_push(std::deque<int> &vertex_q, const int neighbour);
 
     void prim(std::vector<Edge>& tree, std::vector<bool>& visited);
+    void remove_loops();
+    void clear_multigraph();
     void update_edge_queue(edge_p_queue& edge_heap, const std::vector<bool>& visited);
 	void add_to_queue(const unsigned index, edge_p_queue& edge_heap, const std::vector<bool>& visited);
+    void add_reverse_edges();
 };
