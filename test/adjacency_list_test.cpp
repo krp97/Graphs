@@ -36,7 +36,10 @@ TEST(A_List, indexing)
 
     Adjacency_List test_list{ Adjacency_List(list_vec) };
 
-    ASSERT_EQ(input_list, test_list[0]);
+    ASSERT_NE(input_list, test_list[0]);
+
+	input_list.sort(Node::label_comp());
+	ASSERT_EQ(input_list, test_list[0]);
 }
 
 TEST(A_List, init_w_file_data)

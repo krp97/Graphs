@@ -22,12 +22,15 @@ public:
     bool operator!=(const Adjacency_List& rhs) const;
     const std::list<Node>& operator[](const int index) const;
 
+	std::string to_string() const;
+
     pair_vector dijkstra(const int start_v);
 	pair_vector bellman_ford(const int start_v);
     std::vector<Edge> prim(const int start_v);
 
 private:
     std::vector<std::list<Node>> a_list_;
+	void sort_labels();
 
     int find_highest_index(const std::vector<Edge>& file_input) const;
     void fill_with_data(std::vector<std::list<Node>>& list, const std::vector<Edge>& file_input);
@@ -44,10 +47,9 @@ private:
 	void bf_relaxation(std::deque<int>& vertex_q, pair_vector& cost_prev);
 	void slf_push(std::deque<int> &vertex_q, const int neighbour);
 
+	void remove_loops();
     void prim(std::vector<Edge>& tree, std::vector<bool>& visited);
-    void remove_loops();
-    void clear_multigraph();
-    void update_edge_queue(edge_p_queue& edge_heap, const std::vector<bool>& visited);
+	bool all_visited(std::vector<bool>& visited);
 	void add_to_queue(const unsigned index, edge_p_queue& edge_heap, const std::vector<bool>& visited);
-    void add_reverse_edges();
+    void add_reverse_edges(std::vector<Edge>& tree);
 };

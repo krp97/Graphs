@@ -22,12 +22,12 @@ bool Node::operator!=(const Node& rhs) const
 
 bool Node::operator<(const Node& rhs) const
 {
-    return weight_ < rhs.weight_ ? true : false;
+    return end_node_ < rhs.end_node_ ? true : false;
 }
 
 bool Node::operator>(const Node& rhs) const
 {
-    return weight_ > rhs.weight_ ? true : false;
+    return end_node_ > rhs.end_node_ ? true : false;
 }
 
 int Node::get_end_node() const
@@ -38,4 +38,10 @@ int Node::get_end_node() const
 int Node::get_weight() const
 {
     return weight_;
+}
+
+std::string Node::to_string() const
+{
+	return std::string('(' + std::to_string(end_node_) +
+	 ',' + std::to_string(weight_) + ')');
 }

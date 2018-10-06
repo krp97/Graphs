@@ -266,34 +266,34 @@ std::vector<Edge> Adjacency_Matrix::prim(const int start_v)
 		return std::vector<Edge>();
 }
 
+void Adjacency_Matrix::remove_loops()
+{
+	for (int i{ 0 }; i < a_matrix_.size(); ++i)
+		a_matrix_.at(i).at(i) = 0;
+}
+
 void Adjacency_Matrix::prim(std::vector<Edge>& tree, std::vector<bool>& visited)
 {
 	auto edge_q{ edge_p_queue() };
-
-	for (size_t i{ a_matrix_.size() - 1 }; i > 0; --i)
+	int prev_visited{ 0 };
+	while(!all_visited(visited))
 	{
-		update_edge_queue(edge_q, visited);
+		add_to_queue(prev_visited, edge_q, visited);
 		auto mst_e{ edge_q.top() };
 		tree.push_back(mst_e);
 		visited.at(mst_e.get_end()) = true;
-		
+		prev_visited = mst_e.get_end();
+
 		edge_q.pop();
 	}
 }
 
-void Adjacency_Matrix::remove_loops()
+bool Adjacency_Matrix::all_visited(std::vector<bool>& visited)
 {
-	for(int i{0}; i < a_matrix_.size(); ++i)
-		a_matrix_.at(i).at(i) = 0;
-}
-
-void Adjacency_Matrix::update_edge_queue(Adjacency_Matrix::edge_p_queue& edge_q, const std::vector<bool>& visited)
-{
-	for (size_t i{ 0 }; i < visited.size(); ++i)
-	{
-		if (visited.at(i))
-			add_to_queue(i, edge_q, visited);
-	}
+	for (auto& node : visited)
+		if (node == false)
+			return false;
+	return true;
 }
 
 void Adjacency_Matrix::add_to_queue(const unsigned index, Adjacency_Matrix::edge_p_queue& edge_q, const std::vector<bool>& visited)

@@ -45,9 +45,9 @@ TEST(Prim_List, undirected_multigraph)
     auto test_list{ Adjacency_List(handler.load_from_file()) };
 
     auto expected_data{ std::vector<std::list<Node>>{
-        { Node(4, 1) },
-        { Node(2, 2) },
-        { Node(1, 2) },
+        { Node(4, 1), Node(1, 2) },
+        { Node(0, 2) },
+        { Node(3, 1) },
         { Node(4, 1), Node(2, 1)},
         { Node(0, 1), Node(3, 1)}
     } };

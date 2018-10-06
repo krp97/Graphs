@@ -3,10 +3,13 @@
 #include <algorithm>
 #include <climits>
 #include <math.h>
+#include <iostream>
 
 Adjacency_List::Adjacency_List(std::vector<std::list<Node>> list)
     : a_list_{ list }
-{}
+{
+	sort_labels();
+}
 
 Adjacency_List::Adjacency_List(std::vector<Edge> file_input)
 {
@@ -14,6 +17,13 @@ Adjacency_List::Adjacency_List(std::vector<Edge> file_input)
     auto input{ std::vector<std::list<Node>>(size, std::list<Node>()) };
     fill_with_data(input, file_input);
     a_list_ = input;
+	sort_labels();
+}
+
+void Adjacency_List::sort_labels()
+{
+	for (auto& l : a_list_)
+		l.sort(Node::label_comp());
 }
 
 bool Adjacency_List::operator==(const Adjacency_List& rhs) const
@@ -31,6 +41,22 @@ bool Adjacency_List::operator!=(const Adjacency_List& rhs) const
 const std::list<Node>& Adjacency_List::operator[](const int index) const
 {
     return a_list_.at(index);
+}
+
+std::string Adjacency_List::to_string() const
+{
+	auto out{ std::string() };
+	int index{ 0 };
+	for (auto& list : a_list_)
+	{
+		out += std::to_string(index);
+		std::for_each(list.begin(), list.end(), [&out](const Node& n) {
+			out += n.to_string() + ','; 
+		});
+		out += "\n";
+		++index;
+	}
+	return out;
 }
 
 int Adjacency_List::find_highest_index(const std::vector<Edge>& file_input) const
@@ -230,7 +256,11 @@ std::vector<Edge> Adjacency_List::prim(const int start_v)
 		auto tree{ std::vector<Edge>() };
 		auto visited{ std::vector<bool>(a_list_.size(), false) };
 		visited.at(start_v) = true;
-		prim(tree, visited);
+
+		auto list_copy{ Adjacency_List(*this) };
+		list_copy.remove_loops();
+		list_copy.prim(tree, visited);
+		add_reverse_edges(tree);
 
 		return tree;
 	}
@@ -240,31 +270,40 @@ std::vector<Edge> Adjacency_List::prim(const int start_v)
 
 void Adjacency_List::remove_loops()
 {
-                                                                                                                     
+	int index{ 0 };
+	for (auto& lists : a_list_)
+	{
+		lists.remove_if([&index](Node& n){
+			return (index == n.get_end_node());
+		});
+		++index;
+	}
 }
 
 void Adjacency_List::prim(std::vector<Edge>& tree, std::vector<bool>& visited)
 {
 	auto edge_q{ edge_p_queue() };
+	int prev_visited{ 0 };
 
-	for (size_t i{ a_list_.size() - 1 }; i > 0; --i)
+	while (!all_visited(visited))
 	{
-		update_edge_queue(edge_q, visited);
+		add_to_queue(prev_visited, edge_q, visited);
+
 		auto mst_e{ edge_q.top() };
 		tree.push_back(mst_e);
 		visited.at(mst_e.get_end()) = true;
-		
+		prev_visited = mst_e.get_end();
+
 		edge_q.pop();
 	}
 }
 
-void Adjacency_List::update_edge_queue(Adjacency_List::edge_p_queue& edge_q, const std::vector<bool>& visited)
+bool Adjacency_List::all_visited(std::vector<bool>& visited)
 {
-	for (size_t i{ 0 }; i < visited.size(); ++i)
-	{
-		if (visited.at(i))
-			add_to_queue(i, edge_q, visited);
-	}
+	for(auto& node: visited)
+		if(node == false)
+			return false;
+	return true;
 }
 
 void Adjacency_List::add_to_queue(const unsigned index, Adjacency_List::edge_p_queue& edge_q, const std::vector<bool>& visited)
@@ -278,4 +317,11 @@ void Adjacency_List::add_to_queue(const unsigned index, Adjacency_List::edge_p_q
 			edge_q.push(Edge(index, n_it.get_end_node(), weight));
 		}
 	}
+}
+
+void Adjacency_List::add_reverse_edges(std::vector<Edge>& tree)
+{
+	std::vector<Edge> temp_tree{ tree };
+	for (auto& e : temp_tree)
+		tree.push_back(Edge(e.get_end(), e.get_start(), e.get_weight()));
 }
